@@ -48,20 +48,15 @@ def centered(draw, text, y, ft, color):
 
 def make_frame(index, t):
     img = Image.new("RGB", (W, H), (5, 12, 26))
-    pix = img.load()
-    # Fundo escuro com iluminacao azul animada; sem recursos externos.
-    cx = W * (0.52 + 0.12 * math.sin(t * 0.55))
-    cy = H * (0.42 + 0.08 * math.cos(t * 0.41))
-    for y in range(H):
-        for x in range(W):
-            d = ((x - cx) / 440) ** 2 + ((y - cy) / 570) ** 2
-            light = max(0, 1 - d) ** 2
-            band = max(0, 1 - abs(x - W * (0.20 + t / 25)) / 180)
-            pix[x, y] = (
-                int(5 + 8 * light),
-                int(12 + 63 * light + 12 * band),
-                int(26 + 115 * light + 24 * band),
-            )
+    # Brilho cinematografico por camadas: rapido e sem loops pixel a pixel.
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glow, "RGBA")
+    cx = int(W * (0.52 + 0.12 * math.sin(t * 0.55)))
+    cy = int(H * (0.42 + 0.08 * math.cos(t * 0.41)))
+    for radius in range(440, 30, -12):
+        alpha = max(1, int(3 + 7 * (1 - radius / 440)))
+        gd.ellipse((cx-radius, cy-radius, cx+radius, cy+radius), fill=(0, 100, 240, alpha))
+    img = Image.alpha_composite(img.convert("RGBA"), glow).convert("RGB")
     d = ImageDraw.Draw(img)
     d.rounded_rectangle((55, 365, W - 55, 880), radius=44, outline=(24, 167, 230), width=4)
     d.rounded_rectangle((76, 385, W - 76, 858), radius=35, outline=(20, 67, 109), width=2)
