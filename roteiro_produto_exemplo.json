@@ -1,0 +1,24 @@
+{
+  "marca": "Achados Inteligentes",
+  "velocidade_voz": 1,
+  "cenas": [
+    {
+      "titulo": "Um achado para o seu dia",
+      "subtitulo": "Descoberta útil",
+      "fala": "Tem uma ideia interessante para facilitar pequenas tarefas do seu cotidiano.",
+      "imagem": "produto_01.png"
+    },
+    {
+      "titulo": "Veja os detalhes",
+      "subtitulo": "Conheça o produto",
+      "fala": "Confira o tamanho, os materiais e a compatibilidade diretamente no anúncio.",
+      "imagem": "produto_02.png"
+    },
+    {
+      "titulo": "Achados Inteligentes",
+      "subtitulo": "Descubra. Simplifique. Aproveite.",
+      "fala": "Gostou da descoberta? Siga o Achados Inteligentes para conhecer outras novidades.",
+      "imagem": "produto_03.png"
+    }
+  ]
+}
