@@ -10,7 +10,7 @@ Pré-requisitos: Python 3.10+, FFmpeg no PATH e Pillow (`python -m pip install P
 2. Abra PowerShell na pasta extraída e execute `python gerar_video_v2.py`.
 3. Abra a pasta `saida_v2` e assista ao arquivo `achados_inteligentes_v2.mp4`.
 
-O programa determina a duração das cenas pela duração real de cada narração, incluindo uma pequena pausa. Isso impede o corte prematuro do áudio na exportação.
+O programa determina a duração das cenas pela duração real de cada narração, incluindo uma pequena pausa. Isso impede o corte prematuro do áudio na exportação. A versão atual também exibe legendas por cena, faz transições suaves e aplica um zoom discreto nas imagens de produtos.
 
 ## Roteiros e materiais
 
@@ -25,3 +25,7 @@ Para testar sem sintetizador de voz: `python gerar_video_v2.py --sem-voz`.
 - Vídeos com anúncios e material de terceiros só devem ser publicados depois de conferir exatidão das informações, direitos de imagens, voz e trilha e regras da plataforma.
 - Nunca salve senhas, tokens, chaves API, dados de clientes ou credenciais no repositório.
 - O protótipo anterior permanece em `gerar_video.py` como V1.
+
+## Atualização do projeto
+
+Se você já baixou a V2 antes, baixe novamente o ZIP do repositório e extraia em uma **pasta nova**. O arquivo `gerar_video_v2.py` foi atualizado com legendas por cena e animação das imagens. Não é necessário reinstalar Python ou FFmpeg.
