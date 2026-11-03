@@ -1,0 +1,21 @@
+{
+  "marca": "Achados Inteligentes",
+  "velocidade_voz": 1,
+  "cenas": [
+    {
+      "titulo": "Pequenas descobertas",
+      "subtitulo": "Grandes facilidades",
+      "fala": "Já pensou em como pequenas descobertas podem facilitar o seu dia?"
+    },
+    {
+      "titulo": "Tecnologia útil",
+      "subtitulo": "Para a vida real",
+      "fala": "Aqui você encontra tecnologia, acessórios e ideias para a sua rotina."
+    },
+    {
+      "titulo": "Achados Inteligentes",
+      "subtitulo": "Descubra algo novo",
+      "fala": "Bem-vindo ao Achados Inteligentes. Descubra, simplifique e aproveite."
+    }
+  ]
+}
