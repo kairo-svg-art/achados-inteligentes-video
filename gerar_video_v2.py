@@ -56,7 +56,7 @@ def speech(text, path, rate=1):
         return False
     return path.exists() and path.stat().st_size > 44
 
-def combine_audio(wavs, target, pause=0.28):
+def combine_audio(wavs, target, pause=0.63):
     lengths = []
     with wave.open(str(wavs[0]), 'rb') as first:
         rate, ch, width = first.getframerate(), first.getnchannels(), first.getsampwidth()
@@ -72,7 +72,7 @@ def combine_audio(wavs, target, pause=0.28):
                 length = wf.getnframes() / rate
             out.writeframes(frames)
             out.writeframes(b'\x00' * int(rate * pause) * ch * width)
-            lengths.append(length + pause + 0.35)
+            lengths.append(length + pause)
     return lengths
 
 def image_crop(path):
@@ -131,6 +131,8 @@ def main():
     out = ROOT / 'saida_v2'
     frames_dir = out / 'quadros'
     frames_dir.mkdir(parents=True, exist_ok=True)
+    for old in frames_dir.glob('frame_*.jpg'):
+        old.unlink()
     wavs = []
     has_voice = not opts.sem_voz and sys.platform == 'win32'
     if has_voice:
