@@ -133,6 +133,9 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('roteiro', nargs='?', default='roteiro.json')
     p.add_argument('--sem-voz', action='store_true')
+    p.add_argument('--voz', choices=['windows', 'piper', 'nenhuma'], default='windows',
+                   help='Motor de voz: Windows (padrao) ou Piper neural local')
+    p.add_argument('--modelo-piper', default='vozes/pt_BR-faber-medium.onnx')
     opts = p.parse_args()
     if not shutil.which('ffmpeg'):
         sys.exit('ERRO: FFmpeg nao encontrado no PATH')
@@ -149,11 +152,33 @@ def main():
     for old in frames_dir.glob('frame_*.jpg'):
         old.unlink()
     wavs = []
-    has_voice = not opts.sem_voz and sys.platform == 'win32'
+    engine = 'nenhuma' if opts.sem_voz else opts.voz
+    has_voice = engine != 'nenhuma'
+    piper_voice = None
+    if engine == 'piper':
+        try:
+            from piper import PiperVoice
+        except ImportError:
+            sys.exit('ERRO: instale a voz neural usando: python -m pip install piper-tts')
+        model_path = Path(opts.modelo_piper)
+        if not model_path.is_absolute():
+            model_path = ROOT / model_path
+        if not model_path.is_file():
+            sys.exit('ERRO: modelo Piper ausente. Baixe pt_BR-faber-medium para a pasta vozes.')
+        print('Carregando modelo Piper:', model_path)
+        piper_voice = PiperVoice.load(str(model_path))
+    if engine == 'windows' and sys.platform != 'win32':
+        has_voice = False
     if has_voice:
         for i, scene in enumerate(scenes):
             path = out / f'voz_{i+1:02d}.wav'
-            if not speech(scene['fala'], path, cfg.get('velocidade_voz', 1)):
+            if engine == 'piper':
+                with wave.open(str(path), 'wb') as voice_file:
+                    piper_voice.synthesize_wav(scene['fala'], voice_file)
+                ok = path.exists() and path.stat().st_size > 44
+            else:
+                ok = speech(scene['fala'], path, cfg.get('velocidade_voz', 1))
+            if not ok:
                 has_voice = False
                 break
             wavs.append(path)
