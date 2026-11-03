@@ -29,3 +29,18 @@ Para testar sem sintetizador de voz: `python gerar_video_v2.py --sem-voz`.
 ## Atualização do projeto
 
 Se você já baixou a V2 antes, baixe novamente o ZIP do repositório e extraia em uma **pasta nova**. O arquivo `gerar_video_v2.py` foi atualizado com legendas por cena e animação das imagens. Não é necessário reinstalar Python ou FFmpeg.
+
+## Voz neural gratuita opcional (Piper)
+
+A voz padrão do Windows continua disponível. Para usar um sintetizador neural offline em português brasileiro:
+
+```powershell
+python -m pip install piper-tts
+mkdir vozes
+python -m piper.download_voices --data-dir vozes pt_BR-faber-medium
+python gerar_video_v2.py --voz piper
+```
+
+O download da voz pesa aproximadamente 63 MB. Após a instalação inicial, o Piper processa as falas localmente sem cobrança por caracteres. O suporte no Windows com Python 3.14 depende das versões atuais de piper-tts e onnxruntime, por isso execute primeiro o teste e envie o erro se houver. A voz pode não soar natural o suficiente; compare com a versão Windows antes de publicar. Verifique a licença do modelo de voz escolhido e a licença GPL do mecanismo Piper.
+
+Outras opções: `python gerar_video_v2.py --voz windows` ou `python gerar_video_v2.py --sem-voz`.
