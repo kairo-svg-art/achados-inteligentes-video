@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import wave
+import textwrap
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
@@ -98,7 +99,11 @@ def render(scene, i, total, t, progress, photo, brand):
     if photo is not None:
         py = 265 + int(9 * math.sin(progress * math.pi))
         d.rounded_rectangle((37, py-12, 683, py+475), radius=28, fill=(8, 76, 115, 160))
-        im.paste(photo, (45, py))
+        zoom = 1.03 + 0.08 * progress
+        pw, ph = round(630 * zoom), round(455 * zoom)
+        moving = photo.resize((pw, ph), Image.Resampling.LANCZOS)
+        ox, oy = (pw - 630) // 2, (ph - 455) // 2
+        im.paste(moving.crop((ox, oy, ox+630, oy+455)), (45, py))
         d = ImageDraw.Draw(im, 'RGBA')
         d.rectangle((45, py, 675, py+455), outline=(40, 183, 242, 180), width=4)
         title_y, subtitle_y = 820, 950
@@ -108,10 +113,20 @@ def render(scene, i, total, t, progress, photo, brand):
         title_y, subtitle_y = 630, 798
     center(d, scene.get('titulo', '').upper(), title_y, 65, (255, 255, 255))
     center(d, scene.get('subtitulo', ''), subtitle_y, 35, (122, 224, 255), False)
+    spoken = scene.get('fala', '').strip()
+    if spoken:
+        d.rounded_rectangle((69, 992, 651, 1096), radius=18, fill=(4, 19, 36, 245))
+        lines = textwrap.wrap(spoken, width=45, max_lines=3, placeholder='...')
+        for li, line in enumerate(lines):
+            center(d, line, 1004 + li*29, 24, (241, 249, 255), False)
     d.rounded_rectangle((90, 1110, 630, 1120), radius=5, fill=(33, 66, 92, 240))
     fill_x = max(91, 90 + int(540 * min(1, progress)))
     d.rounded_rectangle((90, 1110, fill_x, 1120), radius=5, fill=(50, 209, 255, 255))
     center(d, f'{i+1:02d} / {total:02d}  -  DESCUBRA. SIMPLIFIQUE. APROVEITE.', 1160, 20, (165, 203, 224), False)
+    # Fade sutil de entrada e saida entre as cenas.
+    fade = max(0.0, min(1.0, progress*8, (1-progress)*8))
+    if fade < 1:
+        im = Image.blend(Image.new('RGB', (W, H), (5, 12, 26)), im, fade)
     return im
 
 def main():
